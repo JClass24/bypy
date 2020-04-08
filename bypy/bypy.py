@@ -1545,6 +1545,13 @@ get information of the given path (dir / file) at Baidu Yun.
 		else:
 			#self.pd("Sleep 2 seconds before combining, just to be safer.")
 			#time.sleep(2)
+
+			pars = {
+				'method' : 'upload',
+				'path' : remotepath,
+				'ondup' : ondup }
+			# upload an empty file
+			self.__stream_upload("",pars, self.__preupload_file_act, remotepath)
 			ec = self.__combine_file(remotepath, ondup = 'overwrite')
 			if ec == const.ENoError \
 				or ec == const.IESuperfileCreationFailed \
@@ -1555,6 +1562,9 @@ get information of the given path (dir / file) at Baidu Yun.
 				# (needed for a fresh re-upload later)
 				self.__delete_progress_entry(fullpath)
 			return ec
+
+	def __preupload_file_act(self,r,args):
+		self.pv("'{}' ==> '{}' preupload empty file".format(self.__current_file, args))
 
 	def __rapidupload_file_act(self, r, args):
 		if self.__verify:
